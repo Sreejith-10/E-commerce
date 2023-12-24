@@ -1,0 +1,32 @@
+.step-item {
+	@apply relative flex flex-col justify-center items-center w-36 md:w-28;
+}
+.step-item:not(:first-child):before {
+	@apply content-[''] bg-slate-300 w-full h-[5px] absolute right-[61%] -translate-y-4 md:right-2/4;
+}
+.step {
+	@apply w-8 h-8 md:w-6 md:h-6 flex items-center justify-center z-10 relative rounded-full bg-white text-blue-500 font-bold md:text-sm
+    border-2 border-blue-500;
+}
+.active .step {
+	@apply bg-blue-500 border-none text-white;
+}
+.completed .step {
+	@apply bg-green-500 text-white border-green-500;
+}
+.completed:not(:first-child):before {
+	@apply bg-green-500;
+}
+.active:not(:first-child):before {
+	@apply bg-green-500;
+}
+
+.loader {
+	@apply w-full h-full flex items-center justify-center;
+}
+
+.loader::before {
+	@apply content-[''] w-[100px] h-[100px] border-[15px] border-slate-200 border-t-blue-500 rounded-full animate-spin transition-all delay-1000 duration-1000;
+}
+
+
