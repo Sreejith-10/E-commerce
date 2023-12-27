@@ -91,15 +91,15 @@ const Content = ({closeNav}) => {
 					<div className="flex flex-col items-center justify-center lg:w-[1000px] sm:w-full mx-auto h-auto">
 						<div className="flex items-center justify-between w-full mb-6">
 							<h1 className="lg:ml-7 text-lg font-bold text-blue-500 ">
-								Shop Laptops
+								Laptops
 							</h1>
 							<div
 								onClick={() =>
 									navigate("/all-products", {state: {data: "laptop"}})
 								}
-								className="text-blue-500 font-bold sm:text-sm cursor-pointer flex items-center justify-center">
-								Show all Products
-								<AiOutlineArrowRight className="lg:w-6 lg:h-8 sm:w-4 sm:h-6 fill-blue-500" />
+								className="text-blue-500 font-bold sm:text-md cursor-pointer flex items-center justify-center">
+								Show laptop
+								<AiOutlineArrowRight className="lg:w-6 lg:h-8 sm:w-6 sm:h-6 sm:mr-3 fill-blue-500" />
 							</div>
 						</div>
 						<div className="flex overflow-auto lg:w-full sm:w-full">
@@ -129,7 +129,7 @@ const Content = ({closeNav}) => {
 									onClick={() =>
 										navigate("/all-products", {state: {data: "phone"}})
 									}
-									className="absolute bottom-4 right-4 p-2 font-medium text-white hover:text-blue-500 cursor-pointer">
+									className="absolute bottom-4 right-4 md:right-1 md:bottom-1 p-2 font-medium text-white hover:text-blue-500 cursor-pointer">
 									<h1 className="text-2xl">Smartphones</h1>
 									<p>Show now</p>
 								</div>
@@ -140,7 +140,7 @@ const Content = ({closeNav}) => {
 									alt=""
 									className="w-full h-full rounded-md"
 								/>
-								<div className="absolute bottom-4 right-4 p-2 font-medium text-white hover:text-blue-500 cursor-pointer">
+								<div className="absolute bottom-4 right-4 md:right-12 md:bottom-1 p-2 font-medium text-white hover:text-blue-500 cursor-pointer">
 									<h1 className="text-2xl">Furniture</h1>
 									<p>Show now</p>
 								</div>
@@ -151,8 +151,8 @@ const Content = ({closeNav}) => {
 									alt=""
 									className=" w-full h-full object-cover object-[50%,50%] rounded-md"
 								/>
-								<div className="absolute bottom-4 right-4 p-2 hover:text-blue-500 cursor-pointer">
-									<h1 className="text-2xl">Smartphones</h1>
+								<div className="absolute bottom-4 right-4 md:right-7 md:bottom-1 p-2 hover:text-blue-500 cursor-pointer">
+									<h1 className="text-2xl">Mens wear</h1>
 									<p>Show now</p>
 								</div>
 							</div>

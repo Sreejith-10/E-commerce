@@ -11,13 +11,13 @@ import {
 	deleteField,
 	doc,
 	onSnapshot,
+	setDoc,
 	updateDoc,
 } from "firebase/firestore";
 import {db} from "../../firebase";
 
 const CheckOut = () => {
 	const {state} = useLocation(location.state);
-	console.log(state);
 	const {currentUser} = useSelector((state) => state.auth);
 	const {userAddress, paymentMethod} = useSelector((state) => state.user);
 	const navigate = useNavigate();
@@ -55,55 +55,68 @@ const CheckOut = () => {
 	useEffect(() => {
 		getCart();
 	}, [currentUser]);
-	console.log(state);
 	const totalP = cart?.reduce((acc, value) => {
 		return parseInt(acc) + parseInt(value.total);
 	}, 0);
-	const placeOrder = async () => {
-		const currentDate = new Date();
-		const RecievingDate = new Date(currentDate);
-		RecievingDate.setDate(RecievingDate.getDate() + 5);
-		try {
-			if (state.method === "instantBuy") {
-				await updateDoc(doc(db, "orders", currentUser.uid), {
-					order: arrayUnion({
-						orderId: crypto.randomUUID(),
-						products: [state?.product],
-						deliveryDetails: userAddress,
-						paymentMethod: "COD",
-						orderPlacedOn: currentDate.toLocaleString(),
-						deliveryExpected: RecievingDate.toLocaleDateString(),
-						count: 1,
-						totalPrice: state?.product.price,
-						orderStatus: "Order placed",
-						userId: currentUser.uid,
-					}),
-				})
-					.then((res) => console.log("====", res))
-					.catch((err) => console.log("===", err));
-			} else {
-				await updateDoc(doc(db, "orders", currentUser.uid), {
-					order: arrayUnion({
-						orderId: crypto.randomUUID(),
-						products: cart,
-						deliveryDetails: userAddress,
-						paymentMethod: paymentMethod,
-						orderPlacedOn: currentDate.toLocaleString(),
-						deliveryExpected: RecievingDate.toLocaleDateString(),
-						totalPrice: totalP,
-						orderStatus: "Order placed",
-						userId: currentUser.uid,
-					}),
-				});
-				await updateDoc(doc(db, "cart", currentUser.uid), {
-					cart: deleteField(),
-				});
-			}
-			navigate("/");
-		} catch (err) {
-			console.log(err);
+	const onStock = async (p, c) => {
+		//p -> state.product
+		//c -> cart products
+		if (p) {
+			let updatedProduct = {
+				...p,
+				qty: p.qty - 1,
+			};
+			await setDoc(doc(db, "products", p.proId), {...updatedProduct});
+			return true;
 		}
-		
+	};
+	const placeOrder = async () => {
+		const response = onStock(state.product, cart);
+		if (response) {
+			const currentDate = new Date();
+			const RecievingDate = new Date(currentDate);
+			RecievingDate.setDate(RecievingDate.getDate() + 5);
+			try {
+				if (state.method === "instantBuy") {
+					await updateDoc(doc(db, "orders", currentUser.uid), {
+						order: arrayUnion({
+							orderId: crypto.randomUUID(),
+							products: [state?.product],
+							deliveryDetails: userAddress,
+							paymentMethod: "COD",
+							orderPlacedOn: currentDate.toLocaleString(),
+							deliveryExpected: RecievingDate.toLocaleDateString(),
+							count: 1,
+							totalPrice: state?.product.price,
+							orderStatus: "Order placed",
+							userId: currentUser.uid,
+						}),
+					})
+						.then((res) => console.log("====", res))
+						.catch((err) => console.log("===", err));
+				} else {
+					await updateDoc(doc(db, "orders", currentUser.uid), {
+						order: arrayUnion({
+							orderId: crypto.randomUUID(),
+							products: cart,
+							deliveryDetails: userAddress,
+							paymentMethod: paymentMethod,
+							orderPlacedOn: currentDate.toLocaleString(),
+							deliveryExpected: RecievingDate.toLocaleDateString(),
+							totalPrice: totalP,
+							orderStatus: "Order placed",
+							userId: currentUser.uid,
+						}),
+					});
+					await updateDoc(doc(db, "cart", currentUser.uid), {
+						cart: deleteField(),
+					});
+				}
+				navigate("/");
+			} catch (err) {
+				console.log(err);
+			}
+		}
 	};
 	return (
 		<>

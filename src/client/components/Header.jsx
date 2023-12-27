@@ -130,7 +130,7 @@ const Header = ({showNav, nav, closeNav}) => {
 							className="w-[60px] h-[60px] cursor-pointer flex"
 							onClick={() => navigateHandler("notification")}>
 							<AiOutlineBell className="w-[40px] h-full hover:animate-bellRing fill-white" />
-							{notCount > 0 && (
+							{notCount?.length > 0 && (
 								<span className="w-[20px] h-[20px] bg-white flex items-center justify-center rounded-full font-bold text-blue-500">
 									{notCount && notCount.length}
 								</span>
@@ -141,7 +141,7 @@ const Header = ({showNav, nav, closeNav}) => {
 							onClick={() => navigateHandler("favorites")}>
 							<AiFillHeart className="w-[40px] h-full hover:animate-pulse fill-white" />
 
-							{favCount > 0 && (
+							{favCount?.length > 0 && (
 								<span className="w-[20px] h-[20px] bg-white flex items-center justify-center rounded-full font-bold text-blue-500">
 									{favCount?.length}
 								</span>

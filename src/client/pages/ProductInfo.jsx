@@ -12,9 +12,18 @@ import {useLocation, useNavigate} from "react-router-dom";
 import RatingForms from "../components/RatingForms";
 import {addToFavorite, removeFromFavorite} from "../../utils/favoriteHandler";
 import {useSelector} from "react-redux";
-import {doc, onSnapshot, setDoc} from "firebase/firestore";
+import {
+	arrayUnion,
+	doc,
+	getDoc,
+	onSnapshot,
+	setDoc,
+	updateDoc,
+} from "firebase/firestore";
 import {db} from "../../firebase";
 import {addToCart} from "../../utils/addToCart";
+import {useNotify} from "../../hooks/useNotify";
+import Notify from "../components/Notify";
 
 const ProductInfo = () => {
 	const location = useLocation();
@@ -27,8 +36,9 @@ const ProductInfo = () => {
 	const [product, setProduct] = useState(location.state?.currentProduct);
 	const [ratingsForms, setRatingsForm] = useState(false);
 	const [reviews, setReviews] = useState([]);
+	const [showAlert, setShowAlert] = useNotify();
 
-	const favItem = favorite?.some((item) => item.pro.proId === product.proId);
+	const favItem = favorite?.some((item) => item?.pro.proId === product?.proId);
 	const isFound = cart.some((item) => item.cartItems?.proId === product.proId);
 
 	useEffect(() => {
@@ -45,9 +55,17 @@ const ProductInfo = () => {
 		});
 		navigate("/checkout", {state: {product, method: "instantBuy"}});
 	};
-	console.log(reviews);
+	const notifyUser = async (pro, user) => {
+		await setDoc(doc(db, "notifyUser", pro.proId), {
+			user: arrayUnion(user.uid),
+		});
+		setShowAlert(true);
+	};
 	return (
 		<>
+			{showAlert && (
+				<Notify setShowAlert={setShowAlert} value={"Notify you if available"} />
+			)}
 			<div className="w-full h-full flex items-center justify-center">
 				<div className="w-[80%] h-full md:w-[90%] mt-6">
 					<div className="w-full h-full flex md:flex-col">
@@ -116,18 +134,26 @@ const ProductInfo = () => {
 										className="w-1/2 h-14 md:h-12 bg-white border border-green-500 rounded-md font-bold text-green-500 text-lg shadow-sm ">
 										Go to cart
 									</button>
-								) : (
+								) : product.qty === 0 ? null : (
 									<button
 										onClick={() => addToCart(product, currentUser, isLogged)}
 										className="w-1/2 h-14 md:h-12 bg-white border border-green-500 rounded-md font-bold text-green-500 text-lg shadow-sm ">
 										Add to cart
 									</button>
 								)}
-								<button
-									onClick={instantBuy}
-									className="w-1/2 h-14 ml-3 md:h-12 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
-									Buy now
-								</button>
+								{product.qty === 0 ? (
+									<button
+										onClick={() => notifyUser(product, currentUser)}
+										className="w-1/2 h-14 ml-3 md:h-12 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
+										Notify me
+									</button>
+								) : (
+									<button
+										onClick={instantBuy}
+										className="w-1/2 h-14 ml-3 md:h-12 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
+										Buy now
+									</button>
+								)}
 								{favItem ? (
 									<BsHeartFill
 										onClick={() => {
@@ -176,7 +202,7 @@ const ProductInfo = () => {
 								<div className="w-1/2 h-auto flex items-center justify-center flex-col">
 									<h1 className="text-3xl font-medium">4.4</h1>
 									<span className="font-medium text-2xl">
-										{reviews?.length===0 ? 0 : reviews?.length} Ratings
+										{reviews?.length === 0 ? 0 : reviews?.length} Ratings
 									</span>
 								</div>
 								<div className="w-1/2 h-auto flex flex-col">
@@ -209,10 +235,10 @@ const ProductInfo = () => {
 							</div>
 						</div>
 						<div className="w-full h-auto mt-5 p-4 grid grid-cols-2 md:grid-cols-1">
-							{reviews?.map((item, i) => {
+							{reviews?.map((item, id) => {
 								return (
 									<div
-										key={i}
+										key={id}
 										className="border  p-2 border-opacity-30 border-black">
 										<div className="p-3 flex">
 											{Array(5)
@@ -244,7 +270,10 @@ const ProductInfo = () => {
 																key={i}
 																className="bg-purple-500 rounded-full w-10 h-10 grid place-content-center font-bold text-2xl">
 																{v?.photoURL ? (
-																	<img src={v.photoURL} className="w-10 h-10 rounded-full"/>
+																	<img
+																		src={v.photoURL}
+																		className="w-10 h-10 rounded-full"
+																	/>
 																) : (
 																	v.displayName[0].toUpperCase()
 																)}

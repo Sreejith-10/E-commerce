@@ -10,16 +10,20 @@ const Stepper = ({item}) => {
 		if (item) {
 			if (item === "Order placed") {
 				setCurrentStep(2);
+				return;
 			} else if (item === "Shipped") {
 				setCurrentStep(3);
-			} else if (item === "Outfor Delivery") {
+				return;
+			} else if (item === "Outfordelivery") {
 				setCurrentStep(4);
+				return;
 			} else if (item === "Deliverd") {
 				setCurrentStep(5);
+				return;
 			}
 		}
 	}, [item]);
-	console.log("stepper===>", item);
+	console.log(item);
 	return (
 		<>
 			<div className="w-1/2 h-auto md:w-[99%] lg:mx-auto md:m-0">

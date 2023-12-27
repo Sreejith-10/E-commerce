@@ -13,7 +13,7 @@ const Footer = () => {
 		<>
 			<div className="w-full h-full bg-slate-700 flex items-center justify-center cursor-pointer">
 				<div className="w-full h-auto flex flex-col items-center justify-center p-10 md:p-5">
-					<div className="flex md:grid md:grid-cols-2">
+					<div className="flex md:w-full md:grid md:grid-cols-2">
 						<h1 className="text-2xl text-white font-mono m-4">About</h1>
 						<h1 className="text-2xl text-white font-mono m-4">Blog</h1>
 						<h1 className="text-2xl text-white font-mono m-4">Pricing</h1>

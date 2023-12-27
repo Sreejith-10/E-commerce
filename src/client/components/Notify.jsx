@@ -12,7 +12,7 @@ const Notify = ({setShowAlert,value}) => {
 	});
 	return (
 		<>
-			<div className="w-80 h-16 bg-slate-200 mt-2 mr-6 md:mx-9 md:mt-9 animate-slideIn rounded-md shadow-md absolute flex items-center justify-between">
+			<div className="w-80 h-16 bg-slate-200 mt-2 mr-6 md:mx-9 md:mt-9 animate-slideIn rounded-md shadow-md absolute right-0 flex items-center justify-between ">
 				<h1 className="font-semibold text-slate-800 ml-2">
 					{value}
 				</h1>

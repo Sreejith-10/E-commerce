@@ -1,16 +1,34 @@
-import {arrayUnion, doc, setDoc} from "firebase/firestore";
-import React from "react";
+import {arrayUnion, doc, getDoc, setDoc, updateDoc} from "firebase/firestore";
+import React, {useState} from "react";
 import {BsXSquare} from "react-icons/bs";
 import {db} from "../../firebase";
 
 const ShowOrder = ({data, setS}) => {
-	const verifyOrder = async () => {
-		await setDoc(doc(db, "notificatons", data.userId), {
-			notification: arrayUnion({
-				message: "Order placed",
-				time: data?.orderPlacedOn,
-			}),
+	const [steps, setSteps] = useState([
+		"Order placed",
+		"Shipped",
+		"Outfordelivery",
+		"Deliverd",
+	]);
+	// const verifyOrder = async () => {
+	// 	await setDoc(doc(db, "notificatons", data.userId), {
+	// 		notification: arrayUnion({
+	// 			message: "Order placed",
+	// 			time: data?.orderPlacedOn,
+	// 		}),
+	// 	});
+	// };
+	const procedToNextStep = async () => {
+		let orderRef = await getDoc(doc(db, "orders", data.userId));
+		let order = orderRef.data().order;
+		let newOrder = order.map((item) => {
+			let curretntStep = item.orderStatus;
+			let currentStepIndex = steps.indexOf(curretntStep);
+			if (item.orderId === data.orderId) {
+				return {...item, orderStatus: steps[currentStepIndex + 1]};
+			} else return item;
 		});
+		await updateDoc(doc(db, "orders", data.userId), {order: newOrder});
 	};
 	return (
 		<>
@@ -28,7 +46,6 @@ const ShowOrder = ({data, setS}) => {
 				<div className="w-full h-[50%] p-4 flex">
 					<div className="w-full h-full flex">
 						{data?.products?.map((v, i) => {
-							console.log(v);
 							return (
 								<div
 									key={i}
@@ -89,9 +106,9 @@ const ShowOrder = ({data, setS}) => {
 								{data.orderStatus}
 							</h1>
 							<button
-								onClick={verifyOrder}
+								onClick={procedToNextStep}
 								className="font-bold bg-green-500 border border-white px-1 rounded-md hover:text-blue-500 text-white">
-								Verify
+								Next
 							</button>
 						</div>
 					</div>

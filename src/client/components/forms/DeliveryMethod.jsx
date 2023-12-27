@@ -21,7 +21,6 @@ const Delivery = () => {
 		}
 		dispatch(setPayment(methodForm.type.name));
 	};
-	console.log(user);
 	const checkHandler = (id) => {
 		const upadtedRadioOption = radioOption.map((val, idx) => {
 			if (id === idx) {

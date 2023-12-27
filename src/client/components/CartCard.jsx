@@ -9,11 +9,12 @@ import {db} from "../../firebase";
 import {useNavigate} from "react-router-dom";
 import {setCartCount, setCartItems} from "../../redux/productSlice";
 
-const CartCard = ({val}) => {
+const CartCard = ({val, setOutOfStock}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const {currentUser} = useSelector((state) => state.auth);
 	const {isLogged} = useSelector((state) => state.auth);
+	const {products} = useSelector((state) => state.product);
 	const instantBuy = async (items) => {
 		await setDoc(doc(db, "instantBuy", currentUser.uid), {
 			buy: items,
@@ -36,6 +37,39 @@ const CartCard = ({val}) => {
 			removeItem(currentUser, val, isLogged);
 		}
 	};
+	const incrementCartCount = (currentUser, val, isLogged) => {
+		if (!isLogged) {
+			let oldEntries = JSON.parse(localStorage.getItem("cart"));
+			let oldEntriesUpdate = oldEntries?.map((v) => {
+				if (v.cartItems.proId === val.cartItems.proId)
+					return {...v, count: v.count + 1};
+				return v;
+			});
+			dispatch(setCartItems(oldEntriesUpdate));
+			localStorage.setItem("cart", JSON.stringify(oldEntriesUpdate));
+		}
+		incrementCount(currentUser, val);
+	};
+	const decrementCartCount = (currentUser, val, isLogged) => {
+		if (!isLogged) {
+			let oldEntries = JSON.parse(localStorage.getItem("cart"));
+			let oldEntriesUpdate = oldEntries
+				?.map((v) => {
+					if (v.cartItems.proId === val.cartItems.proId) {
+						return {...v, count: v.count - 1};
+					}
+					return v;
+				})
+				.filter((v) => {
+					if (v.count >= 1) return v;
+				});
+			dispatch(setCartItems(oldEntriesUpdate));
+			oldEntriesUpdate.length === 0
+				? localStorage.removeItem("cart")
+				: localStorage.setItem("cart", JSON.stringify(oldEntriesUpdate));
+		}
+		decrementCount(currentUser, val);
+	};
 	return (
 		<>
 			<div className="w-full h-[200px] md:h-auto shadow-md rounded-md mb-5 flex flex-row bg-slate-100 md:border md:border-black md:border-opacity-30 md:grid md:grid-cols-2 md:place-content-center">
@@ -52,13 +86,13 @@ const CartCard = ({val}) => {
 				<div className="w-[25%] h-full md:w-full flex flex-col items-center justify-center">
 					<div className="flex items-center justify-center">
 						<button
-							onClick={() => incrementCount(currentUser, val, isLogged)}
+							onClick={() => incrementCartCount(currentUser, val, isLogged)}
 							className="w-8 h-8 mr-4 border-2 border-slate-500 rounded-md hover:bg-blue-500 hover:text-white hover:border-white hover:shadow-md bg-white text-blue-500 font-bold flex items-center justify-center">
 							+
 						</button>
 						<p className="mr-4 font-bold">{val?.count}</p>
 						<button
-							onClick={() => decrementCount(currentUser, val, isLogged)}
+							onClick={() => decrementCartCount(currentUser, val, isLogged)}
 							className="w-8 h-8 mr-4 border-2 border-slate-500 rounded-md hover:bg-blue-500 hover:text-white hover:border-white hover:shadow-md bg-white text-blue-500 font-bold flex items-center justify-center">
 							-
 						</button>
@@ -73,11 +107,28 @@ const CartCard = ({val}) => {
 					<h1 className="text-lg mt-5 font-bold text-slate-700">
 						Rs {val?.cartItems?.price}/-
 					</h1>
-					<button
-						onClick={() => instantBuy(val.cartItems)}
-						className="w-1/2 h-9 md:h-12 mb-6 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
-						Buy now
-					</button>
+					{products
+						?.filter((item) => {
+							return item.proId === val?.cartItems?.proId;
+						})
+						.map((item) => {
+							if (item?.qty > 0) {
+								return (
+									<button
+										onClick={() => instantBuy(val.cartItems)}
+										className="w-1/2 h-9 md:h-12 mb-6 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
+										Buy now
+									</button>
+								);
+							} else {
+								setOutOfStock(true)
+								return (
+									<button className="w-1/2 h-9 md:h-12 mb-6 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
+										Out of stock
+									</button>
+								);
+							}
+						})}
 				</div>
 			</div>
 		</>

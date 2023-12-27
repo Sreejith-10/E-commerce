@@ -19,7 +19,7 @@ export default {
 				},
 				slideOut: {
 					"0%": {transform: "none"},
-					"100%": {transform: "translateX(100%)"	},
+					"100%": {transform: "translateX(100%)"},
 				},
 				fadeIn: {
 					"0%": {opacity: 0},
@@ -35,7 +35,7 @@ export default {
 			animation: {
 				slideIn: "slideIn .5s ease-in ",
 				slideOut: "slideOut .5s ease-in ",
-				fadeIn: "fadeIn 1s ease-in-out",
+				fadeIn: "fadeIn .5ss ease-in-out",
 				bellRing: "bellRing 2s ease-in",
 			},
 		},

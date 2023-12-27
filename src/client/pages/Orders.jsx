@@ -25,7 +25,7 @@ const Orders = () => {
 	};
 	useEffect(() => {
 		fetchOrders();
-	}, []);
+	}, [currentUser.uid]);
 	return (
 		<>
 			<div className="w-full h-full">

@@ -61,6 +61,7 @@ const SignUp = () => {
 			await setDoc(doc(db, "orders", res.user.uid), {});
 			await setDoc(doc(db, "cart", res.user.uid), {});
 			await setDoc(doc(db, "favorites", res.user.uid), {});
+			await setDoc(db, "notifications", res.user.uid, {});
 			navigate("/");
 		} catch (err) {
 			const errorCode = err.code;

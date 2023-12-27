@@ -99,7 +99,11 @@ const AllProduct = () => {
 						<h1>No items found</h1>
 					) : (
 						filterResult?.map((v, i) => {
-							return <Tile currentProduct={v} key={i} />;
+							return (
+								<div key={i}>
+									<Tile currentProduct={v} />;
+								</div>
+							);
 						})
 					)}
 				</div>

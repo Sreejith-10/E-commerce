@@ -2,7 +2,7 @@ import {getDownloadURL, ref, uploadBytesResumable} from "firebase/storage";
 import React, {useRef, useState} from "react";
 import {AiOutlineClose} from "react-icons/ai";
 import {db, storage} from "../../firebase";
-import {doc, setDoc, updateDoc} from "firebase/firestore";
+import {doc, getDoc, setDoc, updateDoc} from "firebase/firestore";
 
 const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 	const [proName, setProductName] = useState(id?.proName);
@@ -10,6 +10,7 @@ const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 	const [price, setPrice] = useState(id?.price);
 	const [offer, setOffer] = useState(id?.offer);
 	const [qty, setQty] = useState(id ? id.qty : 1);
+	const [qtyRef, setQtyRef] = useState(id.qty);
 	const [description, setDescription] = useState(id?.description);
 	const [cat, setCat] = useState(id?.cat);
 	const [subCat, setSubCat] = useState(id?.subCat);
@@ -75,6 +76,22 @@ const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 			} catch (err) {
 				console.log(err);
 			}
+		}
+		if (qtyRef === 0 && qty > 0) {
+			let res = await getDoc(doc(db, "notifyUser", id.proId));
+			let user = res?.data().user;
+			console.log(user);
+			user?.map(async (u) => {
+				let d = new Date().toLocaleDateString();
+				await updateDoc(doc(db, "notificatons", u), {
+					notification: arrayUnion({
+						message: `${id.proName} is now available`,
+						time: d,
+					}),
+				})
+					.then((res) => console.log(res))
+					.catch((err) => console.log(err));
+			});
 		}
 	};
 	return (

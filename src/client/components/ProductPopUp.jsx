@@ -117,7 +117,7 @@ const ProductPopUp = ({currentProduct, setProPreview}) => {
 								<div className="p-6">
 									{favItem ? (
 										<BsHeartFill
-											onClick={() => removeFav}
+											onClick={removeFav}
 											size={35}
 											className="fill-blue-500"
 										/>

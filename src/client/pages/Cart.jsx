@@ -3,13 +3,16 @@ import {Link, useNavigate} from "react-router-dom";
 import CartCard from "../components/CartCard";
 import {doc, onSnapshot} from "firebase/firestore";
 import {db} from "../../firebase";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {setCartItems} from "../../redux/productSlice";
 
 const Cart = () => {
+	const dispatch = useDispatch();
 	const {currentUser} = useSelector((state) => state.auth);
 	const {isLogged} = useSelector((state) => state.auth);
 	const {cart} = useSelector((state) => state.product);
 	const [cartProduct, setCartProduct] = useState();
+	const [outOfStock, setOutOfStock] = useState(false);
 	const navigate = useNavigate();
 	const checkoutProducts = () => {
 		isLogged
@@ -21,19 +24,18 @@ const Cart = () => {
 	const totalP = cartProduct?.reduce((acc, value) => {
 		return parseInt(acc) + parseInt(value?.total);
 	}, 0);
-	// const localCart = () => {
-	// 	setCartProduct(cart);
-	// };
+	const localCart = () => {
+		const local = JSON.parse(localStorage.getItem("cart"));
+		dispatch(setCartItems(local));
+	};
 	const onSnap = () => {
 		onSnapshot(doc(db, "cart", currentUser.uid), (doc) => {
 			setCartProduct(doc.data()?.cart);
 		});
 	};
 	useEffect(() => {
-		// localCart();
-		isLogged && onSnap();
+		isLogged ? onSnap() : localCart();
 	}, []);
-	// console.log(cart);
 	return (
 		<>
 			<div className="w-full h-full">
@@ -46,13 +48,19 @@ const Cart = () => {
 							<div className="w-[70%] md:w-[98%] h-auto">
 								{isLogged
 									? cartProduct?.map((val, id) => {
-											return <CartCard val={val} key={id} />;
+											return (
+												<CartCard
+													val={val}
+													key={id}
+													setOutOfStock={setOutOfStock}
+												/>
+											);
 									  })
 									: cart?.map((val, id) => {
 											return <CartCard val={val} key={id} />;
 									  })}
 							</div>
-							<div className="w-[30%] h-[300px] md:w-[90%] md:m-0 ml-4 bg-slate-100 rounded-md shadow-md">
+							<div className="w-[30%] h-[300px] md:w-[98%] md:m-0 ml-4 bg-slate-100 rounded-md shadow-md border border-slate-400 border-opacity-30">
 								<div className="w-full h-auto">
 									<div className="w-full h-12 p-3 flex items-center justify-between border border-x-0 border-t-0 border-b-slate-300">
 										<h1 className="font-semibold text-lg text-slate-500">
@@ -74,11 +82,19 @@ const Cart = () => {
 									</div>
 								</div>
 								<div className="w-full h-20 flex items-center flex-col justify-center">
-									<button
-										onClick={checkoutProducts}
-										className="w-4/5 h-full rounded-md shadow-md bg-blue-500 text-white font-bold text-lg">
-										Checkout
-									</button>
+									{outOfStock ? (
+										<button
+											onClick={() => alert("Some item are out of stock")}
+											className="w-4/5 h-full rounded-md shadow-md bg-blue-500 text-white font-bold text-lg">
+											Checkout
+										</button>
+									) : (
+										<button
+											onClick={checkoutProducts}
+											className="w-4/5 h-full rounded-md shadow-md bg-blue-500 text-white font-bold text-lg">
+											Checkout
+										</button>
+									)}
 									<p>
 										or{" "}
 										<Link

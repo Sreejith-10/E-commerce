@@ -46,7 +46,6 @@ const Account = () => {
 			console.log(err);
 		}
 	};
-	console.log(currentUser);
 
 	return (
 		<>
