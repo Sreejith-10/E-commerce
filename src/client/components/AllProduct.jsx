@@ -100,8 +100,8 @@ const AllProduct = () => {
 					) : (
 						filterResult?.map((v, i) => {
 							return (
-								<div key={i} className="md:w-[98%] h-auto">
-									<Tile currentProduct={v} />;
+								<div key={i} className="md:w-[98%] lg:w-full h-auto lg:flex lg:items-center lg:justify-center">
+									<Tile currentProduct={v} />
 								</div>
 							);
 						})
