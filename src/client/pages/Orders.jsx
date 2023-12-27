@@ -2,14 +2,16 @@ import React, {useEffect, useState} from "react";
 import Stepper from "../components/Stepper";
 import {doc, onSnapshot, setDoc} from "firebase/firestore";
 import {db} from "../../firebase";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {setOrder} from "../../redux/productSlice";
 
 const Orders = () => {
 	const {currentUser} = useSelector((state) => state.auth);
-	const [order, setOrder] = useState([]);
+	const dispatch = useDispatch();
+	const {order} = useSelector((state)=>state.product)
 	const fetchOrders = async () => {
 		onSnapshot(doc(db, "orders", currentUser.uid), (res) => {
-			setOrder(res.data().order);
+			res && dispatch(setOrder(res.data().order));
 		});
 	};
 	const cancelOrder = async (orderId) => {
@@ -32,7 +34,7 @@ const Orders = () => {
 				<h1 className="font-bold text-6xl ml-72 md:m-0 p-2 md:p-0 md:ml-2">
 					Orders
 				</h1>
-				{order?.map((item, idx) => {
+				{order && order?.map((item, idx) => {
 					return (
 						<div
 							key={idx}

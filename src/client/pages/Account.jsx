@@ -106,7 +106,7 @@ const Account = () => {
 								<div className="w-auto h-full md:w-full md:h-1/2 flex flex-col items-center justify-between">
 									<img
 										src={
-											currentUser
+											currentUser.photoURL
 												? currentUser.photoURL
 												: "/images/Default_pfp.svg.png"
 										}

@@ -63,6 +63,9 @@ const ProductInfo = () => {
 	};
 	return (
 		<>
+		{reviews.map((i)=>{
+			console.log(i.star);
+		})}
 			{showAlert && (
 				<Notify setShowAlert={setShowAlert} value={"Notify you if available"} />
 			)}
@@ -268,7 +271,7 @@ const ProductInfo = () => {
 														<>
 															<div
 																key={i}
-																className="bg-purple-500 rounded-full w-10 h-10 grid place-content-center font-bold text-2xl">
+																className="bg-blue-500 text-white rounded-full w-10 h-10 grid place-content-center font-bold text-2xl">
 																{v?.photoURL ? (
 																	<img
 																		src={v.photoURL}

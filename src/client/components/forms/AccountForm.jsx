@@ -20,8 +20,8 @@ const AccountForm = ({
 			<div className="flex flex-col mb-5 mt-3">
 				<label
 					htmlFor="email"
-					className={`mb-3 font-bold text-slate-700 ${
-						emailErr && "text-red-500"
+					className={`mb-3 font-bold  ${
+						emailErr ? "text-red-500" : "text-slate-700"
 					}`}>
 					{emailErr ? "Email already in use" : "Email"}
 				</label>
@@ -30,10 +30,10 @@ const AccountForm = ({
 					type="email"
 					placeholder="Email . . . "
 					value={email}
-					className={`h-8 p-3 font-bold w-full border-2 text-slate-700 outline-blue-500 border-slate-300 rounded-md  ${
+					className={`h-8 p-3 font-bold w-full border-2 outline-blue-500 rounded-md  ${
 						emailErr
-							? "outline-red-500 border-2 rounded-sm border-red-500"
-							: "outline-blue-500"
+							? "outline-red-500 border-2 rounded-md text-red-500 border-red-500"
+							: "outline-blue-500  text-slate-700 border-slate-300 "
 					}`}
 					onChange={(e) => setEmail(e.target.value)}
 				/>
@@ -41,8 +41,8 @@ const AccountForm = ({
 			<div className="flex flex-col mb-5">
 				<label
 					htmlFor="password"
-					className={`mb-3 font-bold  text-slate-700 ${
-						passErr && "text-red-500"
+					className={`mb-3 font-bold  ${
+						passErr ? "text-red-500" : " text-slate-700"
 					}`}>
 					{passErr ? "Weak password " : "Password"}
 				</label>
@@ -52,10 +52,10 @@ const AccountForm = ({
 						type={toggle ? "text" : "password"}
 						placeholder="Password . . . "
 						value={password}
-						className={`h-8 p-3 font-bold w-full  text-slate-700 outline-blue-500 rounded-md ${
+						className={`h-8 p-3 font-bold w-full outline-blue-500 rounded-md ${
 							passErr
-								? "outline-red-500 border-2 rounded-sm border-red-500"
-								: "outline-blue-500"
+								? "outline-red-500 border-2 rounded-md text-red-500 border-red-500"
+								: "outline-blue-500  text-slate-700 border-slate-300 "
 						}`}
 						onChange={(e) => setPassword(e.target.value)}
 					/>

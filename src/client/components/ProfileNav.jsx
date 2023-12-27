@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {auth} from "../../firebase";
 import {useDispatch, useSelector} from "react-redux";
 import {setCurrentUser} from "../../redux/authSlice";
-import {setCartItems} from "../../redux/productSlice";
+import {setCartItems, setFavorites, setOrder} from "../../redux/productSlice";
 
 const ProfileNav = ({profileNav, setProfileNav}) => {
 	const dispatch = useDispatch();
@@ -19,6 +19,8 @@ const ProfileNav = ({profileNav, setProfileNav}) => {
 		signOut(auth);
 		dispatch(setCurrentUser(""));
 		dispatch(setCartItems(""));
+		dispatch(setOrder(""));
+		dispatch(setFavorites(""))
 	};
 	return (
 		<>

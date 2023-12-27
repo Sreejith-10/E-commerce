@@ -2,13 +2,14 @@ import {useMultiStepForm} from "../../hooks/useMultiStepForm";
 import {useNavigate} from "react-router-dom";
 import AccountForm from "../components/forms/AccountForm";
 import UserForm from "../components/forms/UserForm";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {auth, db} from "../../firebase";
 import {createUserWithEmailAndPassword, updateProfile} from "firebase/auth";
 import {doc, setDoc} from "firebase/firestore";
 
 const SignUp = () => {
 	const navigate = useNavigate();
+	const [res, setRes] = useState();
 	const [emailErr, setEmailErr] = useState(false);
 	const [passErr, setPassErr] = useState(false);
 	const [fname, setFname] = useState("");
@@ -45,45 +46,55 @@ const SignUp = () => {
 			setAge={setAge}
 		/>,
 	]);
-	const createAccount = async (e) => {
+	const createAccount1 = async (e) => {
 		e.preventDefault();
-		try {
-			const res = await createUserWithEmailAndPassword(auth, email, password);
-			await setDoc(doc(db, "users", res.user.uid), {
-				uid: res.user.uid,
-				displayName: fname + " " + lname,
-				email,
-				age,
-			});
-			await updateProfile(res.user, {
-				displayName: fname + lname,
-			});
-			await setDoc(doc(db, "orders", res.user.uid), {});
-			await setDoc(doc(db, "cart", res.user.uid), {});
-			await setDoc(doc(db, "favorites", res.user.uid), {});
-			await setDoc(db, "notifications", res.user.uid, {});
-			navigate("/");
-		} catch (err) {
-			const errorCode = err.code;
-			if (errorCode === "auth/email-already-in-use") {
-				setEmailErr(true);
-				setCurrentStepIndex(0);
-			} else if (errorCode === "auth/weak-password") {
-				setPassErr(true);
-				setCurrentStepIndex(0);
-			} else {
+		if (isFirstStep) {
+			try {
+				await createUserWithEmailAndPassword(auth, email, password).then(
+					(res) => {
+						res && setRes(res);
+						res && next();
+					}
+				);
+			} catch (err) {
+				const errorCode = err.code;
+				errorCode === "auth/email-already-in-use"
+					? setEmailErr(true)
+					: setEmailErr(false);
+
+				errorCode === "auth/weak-password"
+					? setPassErr(true)
+					: setPassErr(false);
+			}
+		}
+	};
+	console.log(res);
+	const createAccount2 = async (e) => {
+		e.preventDefault();
+		if (isLastStep) {
+			try {
+				await setDoc(doc(db, "users", res.user.uid), {
+					uid: res.user.uid,
+					displayName: fname + " " + lname,
+					email,
+					age,
+				});
+				await updateProfile(res.user, {
+					displayName: fname + lname,
+				});
+				await setDoc(doc(db, "orders", res.user.uid), {});
+				await setDoc(doc(db, "cart", res.user.uid), {});
+				await setDoc(doc(db, "favorites", res.user.uid), {});
+				await setDoc(db, "notifications", res.user.uid, {});
+			} catch (err) {
 				console.log(err);
 			}
-			console.log(err);
+			navigate("/");
 		}
-		navigate("/");
-	};
-	const onSubmitHandler = (e) => {
-		e.preventDefault();
 	};
 	return (
 		<>
-			<form onSubmit={onSubmitHandler}>
+			<form>
 				<div className="w-full h-screen flex items-center justify-center">
 					<div className="lg:w-[400px] lg:h-[500px] sm:w-[300px] sm:h-[500px] sm:mx-auto bg-slate-200 rounded-md shadow-md flex flex-col items-center ">
 						<div className="w-full h-[15%] flex items-center justify-between p-4 text-xl font-bold text-blue-500">
@@ -116,14 +127,14 @@ const SignUp = () => {
 							)}
 							{!isLastStep ? (
 								<button
-									onClick={next}
+									onClick={createAccount1}
 									type="button"
 									className="bg-blue-500 px-2 py-1 text-xl font-bold text-white rounded-md">
 									Next
 								</button>
 							) : (
 								<button
-									onClick={createAccount}
+									onClick={createAccount2}
 									type="submit"
 									className="bg-blue-500 px-2 py-1 text-xl font-bold rounded-md text-white">
 									SignUp

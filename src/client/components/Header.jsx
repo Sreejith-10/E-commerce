@@ -46,7 +46,7 @@ const Header = ({showNav, nav, closeNav}) => {
 	const getNotify = () => {
 		try {
 			onSnapshot(doc(db, "notificatons", currentUser.uid), (doc) => {
-				doc && setNotCount(doc.data().notification);
+				doc && setNotCount(doc?.data()?.notification);
 			});
 		} catch (err) {
 			console.log(err);
@@ -152,7 +152,7 @@ const Header = ({showNav, nav, closeNav}) => {
 							onClick={() => setProfileNav(!profileNav)}>
 							<img
 								src={
-									isLogged
+									currentUser?.photoURL
 										? currentUser?.photoURL
 										: "/images/Default_pfp.svg.png"
 								}
