@@ -23,9 +23,9 @@ const Tile = ({currentProduct}) => {
 	return (
 		<>
 			<div
-				className="w-2/5 h-[200px] md:w-[98%] md:h-[280px] bg-slate-100 border-2 rounded-md mb-2 flex"
+				className="lg:w-2/5 h-[200px] md:w-[100%] md:h-[280px] bg-slate-100 border-2 rounded-md mb-2 flex"
 				onClick={navigateHandler}>
-				<div className="w-[200px] h-full md:w-[500px] p-2">
+				<div className="w-[200px] h-full md:w-[400px] p-2">
 					<img
 						src={currentProduct?.photoURL}
 						alt=""
@@ -39,7 +39,7 @@ const Tile = ({currentProduct}) => {
 							4.6
 						</h1>
 					</div>
-					<div className="font-medium uppercase">
+					<div className="font-medium uppercase md:hidden">
 						<p>{currentProduct.description}</p>
 					</div>
 				</div>
@@ -49,7 +49,7 @@ const Tile = ({currentProduct}) => {
 					) : (
 						<BsHeart size={30} fill="lightgreen" />
 					)}
-					<div>
+					<div className="md:w-full md:h-auto">
 						<s className="font-medium text-base">
 							Rs {currentProduct.price} /-
 						</s>

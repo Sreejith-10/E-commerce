@@ -94,13 +94,13 @@ const AllProduct = () => {
 						</div>
 					</div>
 				</div>
-				<div className="w-full h-auto flex flex-col items-center justify-center">
+				<div className="w-full h-auto flex flex-col lg:items-center lg:justify-center">
 					{filterResult?.length === 0 ? (
 						<h1>No items found</h1>
 					) : (
 						filterResult?.map((v, i) => {
 							return (
-								<div key={i}>
+								<div key={i} className="md:w-[98%] h-auto">
 									<Tile currentProduct={v} />;
 								</div>
 							);
