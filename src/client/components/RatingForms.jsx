@@ -28,7 +28,7 @@ const RatingForms = ({setRatingsForm, product}) => {
 	};
 	return (
 		<>
-			<div className="w-[500px] h-[300px] bg-slate-100 flex flex-col border border-slate-400 border-opacity-30">
+			<div className="lg:w-[500px] lg:h-[300px] bg-slate-100 flex flex-col border border-slate-400 border-opacity-30">
 				<div className="w-full h-[20%] flex flex-col items-end justify-center">
 					<BsX
 						onClick={() => setRatingsForm(false)}

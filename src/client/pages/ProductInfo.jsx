@@ -39,9 +39,11 @@ const ProductInfo = () => {
 	const [showAlert, setShowAlert] = useNotify();
 
 	const favItem = favorite?.some((item) => item?.pro?.proId === product?.proId);
-	const isFound = cart?.some((item) => item?.cartItems?.proId === product?.proId);
+	const isFound = cart?.some(
+		(item) => item?.cartItems?.proId === product?.proId
+	);
 	useEffect(() => {
-		const unSub = onSnapshot(doc(db, "reviews", product.proId), (doc) => {
+		const unSub = onSnapshot(doc(db, "reviews", product?.proId), (doc) => {
 			setReviews(doc?.data()?.review);
 		});
 		return () => {
@@ -112,7 +114,7 @@ const ProductInfo = () => {
 							<div className="w-full h-[10%] p-5 flex items-center">
 								<h1 className="font-medium text-lg">Stocks left</h1>
 								<div className="bg-red-500 font-bold px-3 rounded-md ml-2 text-white grid place-content-center">
-									{product.qty}
+									{product?.qty}
 								</div>
 							</div>
 							<div className="font-medium p-5 text-slate-600 text-lg">
@@ -133,14 +135,14 @@ const ProductInfo = () => {
 										className="w-1/2 h-14 md:h-12 bg-white border border-green-500 rounded-md font-bold text-green-500 text-lg shadow-sm ">
 										Go to cart
 									</button>
-								) : product.qty === 0 ? null : (
+								) : product?.qty === 0 ? null : (
 									<button
 										onClick={() => addToCart(product, currentUser, isLogged)}
 										className="w-1/2 h-14 md:h-12 bg-white border border-green-500 rounded-md font-bold text-green-500 text-lg shadow-sm ">
 										Add to cart
 									</button>
 								)}
-								{product.qty === 0 ? (
+								{product?.qty === 0 ? (
 									<button
 										onClick={() => notifyUser(product, currentUser)}
 										className="w-1/2 h-14 ml-3 md:h-12 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
@@ -179,7 +181,7 @@ const ProductInfo = () => {
 					</div>
 					<div className="w-full h-auto mb-6 border border-black rounded-md border-opacity-30 relative">
 						{ratingsForms && (
-							<div className=" w-full h-full flex items-start absolute left-[30%]">
+							<div className="w-full h-full flex items-start absolute left-[30%] md:left-0">
 								<RatingForms
 									setRatingsForm={setRatingsForm}
 									product={product}
