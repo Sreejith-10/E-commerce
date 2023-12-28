@@ -3,12 +3,15 @@ import SearchBox from "./SearchBox";
 import Sort from "./Sort";
 import Filter from "./Filter";
 import Tile from "./Tile";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useLocation} from "react-router-dom";
+import {setFilterProducts} from "../../redux/productSlice";
 
 const AllProduct = () => {
+	const dispatch = useDispatch();
 	const {state} = useLocation(location.state);
 	const {products} = useSelector((state) => state.product);
+	const {filterProducts} = useSelector((state) => state.product);
 	const [showSort, setShowSort] = useState(false);
 	const [showFilter, setShowFilter] = useState(false);
 	const [searchKey, setSearchKey] = useState("");
@@ -16,10 +19,10 @@ const AllProduct = () => {
 	const [dataRef, setDataRef] = useState([]);
 	const [navItem, setNavItem] = useState(state?.data);
 	const [radio, setRadio] = useState();
-
-	const onKeyDownHandler = async (e) => {
+	console.log(filterProducts);
+	const onKeyDownHandler = async () => {
 		let key = searchKey.split(" ");
-		if (e.key === "Enter") {
+		// if (e.key === "Enter") {
 			const result = products.filter((v) => {
 				if (key.length === 1) {
 					return (
@@ -37,9 +40,10 @@ const AllProduct = () => {
 					});
 				}
 			});
+			result.length != 0 && dispatch(setFilterProducts(dataRef));
 			setFilterResult(result);
 			setDataRef(result);
-		}
+		// }
 	};
 	const getOneItem = () => {
 		if (navItem === "all") {
@@ -49,6 +53,7 @@ const AllProduct = () => {
 				return item?.cat?.toLowerCase() === navItem?.toLowerCase();
 			});
 			setFilterResult(itemsFiltered);
+			dispatch(setFilterProducts(itemsFiltered));
 		}
 	};
 	useEffect(() => {
@@ -100,7 +105,9 @@ const AllProduct = () => {
 					) : (
 						filterResult?.map((v, i) => {
 							return (
-								<div key={i} className="md:w-[98%] lg:w-full h-auto lg:flex lg:items-center lg:justify-center">
+								<div
+									key={i}
+									className="md:w-[98%] lg:w-full h-auto lg:flex lg:items-center lg:justify-center">
 									<Tile currentProduct={v} />
 								</div>
 							);

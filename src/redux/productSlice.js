@@ -6,6 +6,7 @@ const INITIAL_STATE = {
 	cart: [],
 	order: [],
 	cartcount: 0,
+	filterProducts: [],
 };
 
 const productSlice = createSlice({
@@ -27,9 +28,18 @@ const productSlice = createSlice({
 		setCartCount: (state, action) => {
 			state.cartcount = action.payload;
 		},
+		setFilterProducts: (state, action) => {
+			state.filterProducts = action.payload;
+		},
 	},
 });
 
-export const {getProducts, setFavorites, setOrder, setCartItems, setCartCount} =
-	productSlice.actions;
+export const {
+	getProducts,
+	setFavorites,
+	setOrder,
+	setCartItems,
+	setCartCount,
+	setFilterProducts,
+} = productSlice.actions;
 export default productSlice.reducer;

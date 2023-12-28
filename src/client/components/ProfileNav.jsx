@@ -20,7 +20,8 @@ const ProfileNav = ({profileNav, setProfileNav}) => {
 		dispatch(setCurrentUser(""));
 		dispatch(setCartItems(""));
 		dispatch(setOrder(""));
-		dispatch(setFavorites(""))
+		dispatch(setFavorites(""));
+		navigate("/");
 	};
 	return (
 		<>

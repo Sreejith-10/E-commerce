@@ -23,8 +23,8 @@ const Tile = ({currentProduct}) => {
 	return (
 		<>
 			<div
-				className="lg:w-2/5 h-[200px] md:w-[100%] md:h-[280px] bg-slate-100 border-2 rounded-md mb-2 flex"
-				onClick={navigateHandler}>
+				onClick={navigateHandler}
+				className="lg:w-2/5 h-[200px] md:w-[100%] md:h-[280px] bg-slate-100 border-2 rounded-md mb-2 flex">
 				<div className="w-[200px] h-full md:w-[400px] p-2">
 					<img
 						src={currentProduct?.photoURL}

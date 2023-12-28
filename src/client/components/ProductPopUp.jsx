@@ -20,7 +20,7 @@ const ProductPopUp = ({currentProduct, setProPreview}) => {
 	const showDetails = () => {
 		navigate("/product-info", {state: {currentProduct}});
 	};
-	const isFound = cart.some(
+	const isFound = cart?.some(
 		(item) => item.cartItems?.proId === currentProduct.proId
 	);
 	const addItemsToCart = (currentProduct, currentUser, isLogged) => {

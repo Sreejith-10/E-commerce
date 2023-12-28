@@ -23,6 +23,9 @@ const CartCard = ({val, setOutOfStock}) => {
 			state: {product: val.cartItems, method: "instantBuy"},
 		});
 	};
+	const showDetails = () => {
+		navigate("/product-info", {state: {currentProduct: val.cartItems}});
+	};
 	const removeItemHandler = (currentUser, val, isLogged) => {
 		if (!isLogged) {
 			let oldEntries = JSON.parse(localStorage.getItem("cart"));
@@ -73,7 +76,9 @@ const CartCard = ({val, setOutOfStock}) => {
 	return (
 		<>
 			<div className="w-full h-[200px] md:h-auto shadow-md rounded-md mb-5 flex flex-row bg-slate-100 md:border md:border-black md:border-opacity-30 md:grid md:grid-cols-2 md:place-content-center">
-				<div className="w-[25%] md:w-full h-full flex items-center justify-center">
+				<div
+					className="w-[25%] md:w-full h-full flex items-center justify-center"
+					onClick={showDetails}>
 					<img
 						src={val?.cartItems?.photoURL}
 						alt=""
@@ -121,7 +126,7 @@ const CartCard = ({val, setOutOfStock}) => {
 									</button>
 								);
 							} else {
-								setOutOfStock(true)
+								setOutOfStock(true);
 								return (
 									<button className="w-1/2 h-9 md:h-12 mb-6 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
 										Out of stock

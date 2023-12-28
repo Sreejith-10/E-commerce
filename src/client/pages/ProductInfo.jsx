@@ -38,9 +38,8 @@ const ProductInfo = () => {
 	const [reviews, setReviews] = useState([]);
 	const [showAlert, setShowAlert] = useNotify();
 
-	const favItem = favorite?.some((item) => item?.pro.proId === product?.proId);
-	const isFound = cart.some((item) => item.cartItems?.proId === product.proId);
-
+	const favItem = favorite?.some((item) => item?.pro?.proId === product?.proId);
+	const isFound = cart?.some((item) => item?.cartItems?.proId === product?.proId);
 	useEffect(() => {
 		const unSub = onSnapshot(doc(db, "reviews", product.proId), (doc) => {
 			setReviews(doc?.data()?.review);
@@ -63,9 +62,6 @@ const ProductInfo = () => {
 	};
 	return (
 		<>
-		{reviews.map((i)=>{
-			console.log(i.star);
-		})}
 			{showAlert && (
 				<Notify setShowAlert={setShowAlert} value={"Notify you if available"} />
 			)}
