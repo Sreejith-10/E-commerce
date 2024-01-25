@@ -1,8 +1,32 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# E-commerce website
 
-Currently, two official plugins are available:
+This is an e-commerce website made with react and firebase with all basic features needed in an e-commerce website.
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Live previews
+- User authentication
+- Order tracking
+- Set notifications for out of stock products
+- Rate and review products
+- Admin panel
+- Fully responsive design
+
+
+## Tech Stack
+
+**Tech:** React, Redux, TailwindCSS, Firebase
+
+
+## Screenshots
+
+![App Screenshot]("https://drive.google.com/file/d/1INHf7srGg17Ch1soIMFyesWK74HXWWkD/view?usp=sharing")
+
+
+## Live project
+
+Live : https://e-commerce-app-54e4a.web.app/
+## Feedback
+
+If you have any feedback, please reach out to us at sreejithsree956266@gmail.com
+
