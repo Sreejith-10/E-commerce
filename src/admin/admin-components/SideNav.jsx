@@ -13,7 +13,7 @@ const SideNav = ({nav, setNav}) => {
 	return (
 		<>
 			{nav && (
-				<div className="w-[80%] h-full fixed top-0 left-0 transition-all ease-in-out duration-200">
+				<div className="w-[80%] h-full fixed top-0 left-0 transition-all ease-in-out duration-200 z-[99]">
 					<div className="w-[100%] h-[100%] z-50 absolute bg-blue-500 ">
 						<div className="w-auto h-[100px] border-b text-center text-4xl font-bold text-white flex items-center justify-evenly">
 							<h1>Admin</h1>

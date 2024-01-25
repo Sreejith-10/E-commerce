@@ -9,17 +9,17 @@ import {
 import {FaBars} from "react-icons/fa";
 import ProfileNav from "./ProfileNav";
 import {Link, NavLink, useNavigate} from "react-router-dom";
-import {doc, onSnapshot} from "firebase/firestore";
+import {doc, onSnapshot, updateDoc} from "firebase/firestore";
 import {db} from "../../firebase";
 import {useDispatch, useSelector} from "react-redux";
 import {setCartCount, setFavorites} from "../../redux/productSlice";
 
-const Header = ({showNav, nav, closeNav}) => {
+const Header = ({showNav, nav, closeNav, profileNav, setProfileNav}) => {
 	const {currentUser} = useSelector((state) => state.auth);
 	const {isLogged} = useSelector((state) => state.auth);
 	const {cartcount} = useSelector((state) => state.product);
 	const dispatch = useDispatch();
-	const [profileNav, setProfileNav] = useState(false);
+	// const [profileNav, setProfileNav] = useState(false);
 	const navigate = useNavigate();
 	const [favCount, setFavCount] = useState();
 	const [notCount, setNotCount] = useState();
@@ -43,6 +43,7 @@ const Header = ({showNav, nav, closeNav}) => {
 			console.log(err);
 		}
 	};
+
 	const getNotify = () => {
 		try {
 			onSnapshot(doc(db, "notificatons", currentUser.uid), (doc) => {
@@ -52,6 +53,7 @@ const Header = ({showNav, nav, closeNav}) => {
 			console.log(err);
 		}
 	};
+
 	const updateState = () => {
 		setCartCount(0);
 		setFavCount(0);
@@ -64,7 +66,7 @@ const Header = ({showNav, nav, closeNav}) => {
 		getNotify();
 		!currentUser && updateState();
 	}, [currentUser, isLogged]);
-	console.log(cartcount);
+
 	const navigateHandler = (p) => {
 		if (p === "cart") {
 			navigate("/cart");
@@ -74,6 +76,10 @@ const Header = ({showNav, nav, closeNav}) => {
 			isLogged ? navigate("/favorites") : navigate("/login");
 		}
 	};
+
+	const notificationCount = notCount?.filter((item) => {
+		return !item.read;
+	});
 	return (
 		<>
 			<nav className="w-full h-[70px] bg-blue-500">
@@ -115,7 +121,7 @@ const Header = ({showNav, nav, closeNav}) => {
 							</NavLink>
 						</div>
 					</div>
-					<div className="mr-5 w-[300px] flex items-center justify-between">
+					<div className="mr-5 w-[300px] flex items-center justify-between md:justify-end">
 						<div
 							className="w-[60px] h-[60px] cursor-pointer flex"
 							onClick={() => navigateHandler("cart")}>
@@ -132,12 +138,12 @@ const Header = ({showNav, nav, closeNav}) => {
 							<AiOutlineBell className="w-[40px] h-full hover:animate-bellRing fill-white" />
 							{notCount?.length > 0 && (
 								<span className="w-[20px] h-[20px] bg-white flex items-center justify-center rounded-full font-bold text-blue-500">
-									{notCount && notCount.length}
+									{notCount && notificationCount?.length}
 								</span>
 							)}
 						</div>
 						<div
-							className="w-[60px] h-[60px] cursor-pointer flex"
+							className="w-[60px] h-[60px] cursor-pointer md:hidden flex"
 							onClick={() => navigateHandler("favorites")}>
 							<AiFillHeart className="w-[40px] h-full hover:animate-pulse fill-white" />
 

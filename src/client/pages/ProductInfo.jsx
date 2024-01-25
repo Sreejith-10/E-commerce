@@ -56,11 +56,22 @@ const ProductInfo = () => {
 		});
 		navigate("/checkout", {state: {product, method: "instantBuy"}});
 	};
-	const notifyUser = async (pro, user) => {
-		await setDoc(doc(db, "notifyUser", pro.proId), {
-			user: arrayUnion(user.uid),
-		});
-		setShowAlert(true);
+	const notifyUser = async (pro) => {
+		try {
+			const waitingList = await getDoc(doc(db, "notifyUser", pro.proId));
+			if (waitingList.data()) {
+				await updateDoc(doc(db, "notifyUser", pro.proId), {
+					user: arrayUnion(currentUser.uid),
+				});
+			} else {
+				await setDoc(doc(db, "notifyUser", pro.proId), {
+					user: arrayUnion(currentUser.uid),
+				});
+			}
+			setShowAlert(true);
+		} catch (err) {
+			console.log(err);
+		}
 	};
 	return (
 		<>
@@ -144,8 +155,8 @@ const ProductInfo = () => {
 								)}
 								{product?.qty === 0 ? (
 									<button
-										onClick={() => notifyUser(product, currentUser)}
-										className="w-1/2 h-14 ml-3 md:h-12 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
+										onClick={() => notifyUser(product)}
+										className="w-1/2 h-14 ml-3 md:h-12 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm transition-transform active:scale-75">
 										Notify me
 									</button>
 								) : (

@@ -9,7 +9,7 @@ const AdminPanel = () => {
 	return (
 		<>
 			<div className="w-full h-full flex">
-				<div className="h-full w-[20%]">
+				<div className="h-full w-[20%] sm:w-0">
 					<SideNav nav={nav} setNav={setNav}/>
 				</div>
 				<div className="w-full h-[100%]">

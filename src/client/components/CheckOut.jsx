@@ -112,6 +112,11 @@ const CheckOut = () => {
 						cart: deleteField(),
 					});
 				}
+				state.product.forEach(async (item) => {
+					await updateDoc(doc(db, "products", item.cartItems.proId), {
+						qty: parseInt(item.cartItems.qty - item.count),
+					});
+				});
 				navigate("/");
 			} catch (err) {
 				console.log(err);

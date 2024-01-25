@@ -8,10 +8,13 @@ import {useDispatch, useSelector} from "react-redux";
 import {db} from "../../firebase";
 import {useNavigate} from "react-router-dom";
 import {setCartCount, setCartItems} from "../../redux/productSlice";
+import {useNotify} from "../../hooks/useNotify";
+import Notify from "./Notify";
 
 const CartCard = ({val, setOutOfStock}) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const [showAlert, setShowAlert] = useNotify();
 	const {currentUser} = useSelector((state) => state.auth);
 	const {isLogged} = useSelector((state) => state.auth);
 	const {products} = useSelector((state) => state.product);
@@ -41,6 +44,10 @@ const CartCard = ({val, setOutOfStock}) => {
 		}
 	};
 	const incrementCartCount = (currentUser, val, isLogged) => {
+		if (val.cartItems.qty <= val.count) {
+			setShowAlert(true);
+			return;
+		}
 		if (!isLogged) {
 			let oldEntries = JSON.parse(localStorage.getItem("cart"));
 			let oldEntriesUpdate = oldEntries?.map((v) => {
@@ -75,6 +82,14 @@ const CartCard = ({val, setOutOfStock}) => {
 	};
 	return (
 		<>
+			{showAlert && (
+				<div className="absolute top-10 right-0">
+					<Notify
+						setShowAlert={setShowAlert}
+						value={"This product stock limit is reached"}
+					/>
+				</div>
+			)}
 			<div className="w-full h-[200px] md:h-auto shadow-md rounded-md mb-5 flex flex-row bg-slate-100 md:border md:border-black md:border-opacity-30 md:grid md:grid-cols-2 md:place-content-center">
 				<div
 					className="w-[25%] md:w-full h-full flex items-center justify-center"
@@ -120,6 +135,7 @@ const CartCard = ({val, setOutOfStock}) => {
 							if (item?.qty > 0) {
 								return (
 									<button
+										key={item.proId}
 										onClick={() => instantBuy(val.cartItems)}
 										className="w-1/2 h-9 md:h-12 mb-6 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
 										Buy now
@@ -128,7 +144,9 @@ const CartCard = ({val, setOutOfStock}) => {
 							} else {
 								setOutOfStock(true);
 								return (
-									<button className="w-1/2 h-9 md:h-12 mb-6 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
+									<button
+										key={item.proId}
+										className="w-1/2 h-9 md:h-12 mb-6 bg-green-500 rounded-md font-bold text-white text-lg shadow-sm ">
 										Out of stock
 									</button>
 								);

@@ -68,10 +68,10 @@ const AddProducts = ({setAddForm, setClose}) => {
 	};
 	return (
 		<>
-			<div className="w-full h-[95%] flex bg-slate-200 shadow-md rounded-md">
-				<div className="w-[40%] h-full flex flex-col items-center justify-evenly">
+			<div className="w-full h-[95%] flex sm:flex-col bg-slate-200 shadow-md rounded-md">
+				<div className="w-[40%] sm:w-auto h-full flex flex-col items-center justify-evenly">
 					<h1 className="font-bold text-2xl text-slate-700">Product Image</h1>
-					<div className="w-[500px] h-[500px] relative bg-blue-200">
+					<div className="w-[500px] h-[500px] sm:w-[90%] sm:h-[350px] relative bg-blue-200">
 						<img src={img} alt="" className="w-full h-full" />
 						<input
 							type="file"
@@ -86,8 +86,8 @@ const AddProducts = ({setAddForm, setClose}) => {
 						</button>
 					</div>
 				</div>
-				<div className="w-[30%] flex flex-col justify-center items-start">
-					<div className="flex flex-col mb-5 mt-3">
+				<div className="w-[30%] sm:w-full flex flex-col justify-center items-start">
+					<div className=" flex flex-col mb-5 mt-3">
 						<label htmlFor="name" className="mb-3 font-bold text-slate-700">
 							Product Name
 						</label>
@@ -164,7 +164,7 @@ const AddProducts = ({setAddForm, setClose}) => {
 					</div>
 				</div>
 				<div className="w-[30%] h-full flex flex-col items-end justify-between">
-					<div className="p-5 cursor-pointer">
+					<div className="p-5 cursor-pointer sm:hidden md:hidden">
 						<AiOutlineClose
 							className="w-10 h-10 fill-red-500 border-red-500 border-2 rounded-md"
 							onClick={closeCurrentForm}

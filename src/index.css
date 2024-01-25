@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer utilities {
-	@variants responsive {
+@variants responsive {
 		::-webkit-scrollbar {
 			margin-top: 10px;
 			height: 5px;

@@ -10,9 +10,13 @@ const ProfileNav = ({profileNav, setProfileNav}) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const {isLogged} = useSelector((state) => state.auth);
-	const [keys, setKeys] = useState(["Account", "Something"]);
+	const [keys, setKeys] = useState(["Account", "Something", "Favorites"]);
 	const NavigationHandler = (v) => {
-		if (v === "Account") navigate("/account");
+		if (v === "Account") {
+			navigate("/account");
+		} else if (v === "Favorites") {
+			navigate("/favorites")
+		}
 		setProfileNav(false);
 	};
 	const logOut = () => {

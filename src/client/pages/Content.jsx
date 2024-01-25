@@ -134,7 +134,11 @@ const Content = ({closeNav}) => {
 									<p>Show now</p>
 								</div>
 							</div>
-							<div className="w-full h-full relative p-2">
+							<div
+								className="w-full h-full relative p-2"
+								onClick={() =>
+									navigate("/all-products", {state: {data: "furniture"}})
+								}>
 								<img
 									src="/images/furniture.webp"
 									alt=""
@@ -145,7 +149,11 @@ const Content = ({closeNav}) => {
 									<p>Show now</p>
 								</div>
 							</div>
-							<div className="col-start-2 w-full h-full relative p-2 font-medium text-white">
+							<div
+								className="col-start-2 w-full h-full relative p-2 font-medium text-white"
+								onClick={() =>
+									navigate("/all-products", {state: {data: "clothes"}})
+								}>
 								<img
 									src="/images/clothes.jpeg"
 									alt=""

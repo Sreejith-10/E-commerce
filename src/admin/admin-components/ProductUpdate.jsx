@@ -2,7 +2,14 @@ import {getDownloadURL, ref, uploadBytesResumable} from "firebase/storage";
 import React, {useRef, useState} from "react";
 import {AiOutlineClose} from "react-icons/ai";
 import {db, storage} from "../../firebase";
-import {doc, getDoc, setDoc, updateDoc} from "firebase/firestore";
+import {
+	arrayUnion,
+	doc,
+	getDoc,
+	increment,
+	setDoc,
+	updateDoc,
+} from "firebase/firestore";
 
 const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 	const [proName, setProductName] = useState(id?.proName);
@@ -54,8 +61,6 @@ const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 						);
 					}
 				);
-				setClose(true);
-				setUpdateForm(false);
 			} catch (err) {
 				console.log(err);
 			}
@@ -71,8 +76,6 @@ const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 					subCat,
 					qty,
 				});
-				setClose(true);
-				setUpdateForm(false);
 			} catch (err) {
 				console.log(err);
 			}
@@ -80,26 +83,41 @@ const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 		if (qtyRef === 0 && qty > 0) {
 			let res = await getDoc(doc(db, "notifyUser", id.proId));
 			let user = res?.data().user;
-			console.log(user);
 			user?.map(async (u) => {
 				let d = new Date().toLocaleDateString();
-				await updateDoc(doc(db, "notificatons", u), {
-					notification: arrayUnion({
-						message: `${id.proName} is now available`,
-						time: d,
-					}),
-				})
-					.then((res) => console.log(res))
-					.catch((err) => console.log(err));
+				const userNotify = await getDoc(doc(db, "notifications", u));
+				if (userNotify) {
+					await updateDoc(doc(db, "notificatons", u), {
+						notification: arrayUnion({
+							notId: new Date().getTime(),
+							message: `${id.proName} is now available`,
+							time: d,
+							read: false,
+						}),
+					})
+						.then((res) => console.log(res))
+						.catch((err) => console.log(err));
+				} else {
+					await setDoc(doc(db, "notificatons", u), {
+						notification: arrayUnion({
+							notId: new Date().getTime(),
+							message: `${id.proName} is now available`,
+							time: d,
+							read: false,
+						}),
+					}).catch((err) => console.log(err));
+				}
 			});
+			setClose(true);
+			setUpdateForm(false);
 		}
 	};
 	return (
 		<>
 			<div className="w-full h-[95%] flex bg-slate-200 shadow-md rounded-md">
-				<div className="w-[40%] h-full flex flex-col items-center justify-evenly">
+				<div className="w-[40%] sm:w-auto h-full flex flex-col items-center justify-evenly">
 					<h1 className="font-bold text-2xl text-slate-700">Product Image</h1>
-					<div className="w-[500px] h-[500px] relative bg-blue-200">
+					<div className="w-[500px] h-[500px] relative bg-blue-200 sm:w-[90%] sm:h-[350px] ">
 						<img src={currentImg} alt="" className="w-full h-full" />
 						<input
 							type="file"
@@ -114,7 +132,7 @@ const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 						</button>
 					</div>
 				</div>
-				<div className="w-[30%] flex flex-col justify-center items-start">
+				<div className="w-[30%] sm:w-full flex flex-col justify-center items-start">
 					<div className="flex flex-col mb-5 mt-3">
 						<label htmlFor="name" className="mb-3 font-bold text-slate-700">
 							Product Name
@@ -186,13 +204,13 @@ const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 							required
 							type="number"
 							value={qty}
-							onChange={(e) => setQty(e.target.value)}
+							onChange={(e) => setQty(parseInt(e.target.value))}
 							className="w-20 h-8 p-3 rounded-sm font-bold  outline-blue-500 border border-slate-800 border-opacity-50"
 						/>
 					</div>
 				</div>
 				<div className="w-[30%] h-full flex flex-col items-end justify-between">
-					<div className="p-5 cursor-pointer">
+					<div className="p-5 cursor-pointer sm:hidden">
 						<AiOutlineClose
 							className="w-10 h-10 fill-red-500 border-red-500 border-2 rounded-md"
 							onClick={() => {
@@ -232,7 +250,7 @@ const ProductUpdate = ({id, setUpdateForm, setClose}) => {
 					<div className="p-5">
 						<button
 							onClick={updateProduct}
-							className="bg-green-500 py-2 px-5 rounded-md text-xl font-bold text-white">
+							className="bg-green-500 py-2 px-5 rounded-md text-xl font-bold text-white active:scale-90 transition-transform">
 							Update
 						</button>
 					</div>

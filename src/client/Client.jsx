@@ -1,9 +1,10 @@
-import { useState} from "react";
+import {useState} from "react";
 import Header from "./components/Header";
 import ClientRoute from "../routes/ClientRoute";
 
 const Client = () => {
 	const [nav, setNav] = useState(false);
+	const [profileNav, setProfileNav] = useState(false);
 	const showNav = () => {
 		setNav(true);
 	};
@@ -19,11 +20,13 @@ const Client = () => {
 						closeNav={closeNav}
 						nav={nav}
 						setNav={setNav}
+						profileNav={profileNav}
+						setProfileNav={setProfileNav}
 					/>
 				</div>
-				<>
+				<div onClick={() => setProfileNav(false)}>
 					<ClientRoute closeNav={closeNav} />
-				</>
+				</div>
 			</div>
 		</>
 	);
